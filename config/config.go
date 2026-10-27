@@ -12,6 +12,7 @@ import (
 type Config struct {
 	ListenAddr          string
 	BaseURL             string
+	InstanceName        string
 	RenderedPagesFolder string
 	CustomCss           string
 }
@@ -62,18 +63,28 @@ func (c *Config) IsValid() (err error) {
 // New creates a Config object based on some hard-coded defaults, otherwise
 // it should use your configured environment variables
 func New() (c Config) {
-	c.ListenAddr = os.Getenv("LISTEN_ADDR")
-	if c.ListenAddr == "" {
+	var isSet bool
+
+	c.ListenAddr, isSet = os.LookupEnv("LISTEN_ADDR")
+	if !isSet {
 		c.ListenAddr = "127.0.0.1:8080"
 	}
-	c.BaseURL = os.Getenv("BASE_URL")
-	if c.BaseURL == "" {
+	c.BaseURL, isSet = os.LookupEnv("BASE_URL")
+	if !isSet {
 		c.BaseURL = "http://" + c.ListenAddr
 	}
-	c.RenderedPagesFolder = os.Getenv("RENDERED_PAGES_FOLDER")
-	if c.RenderedPagesFolder == "" {
+	c.InstanceName, isSet = os.LookupEnv("INSTANCE_NAME")
+	if !isSet {
+		c.InstanceName = "snot"
+	}
+	c.RenderedPagesFolder, isSet = os.LookupEnv("RENDERED_PAGES_FOLDER")
+	if !isSet {
 		c.RenderedPagesFolder = "./cache"
 	}
-	c.CustomCss = os.Getenv("CUSTOM_CSS")
+	c.CustomCss, isSet = os.LookupEnv("CUSTOM_CSS")
+	if !isSet {
+		c.CustomCss = ""
+	}
+
 	return c
 }

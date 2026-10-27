@@ -3,16 +3,12 @@ package main
 import (
 	"flag"
 	"fmt"
-	"html/template"
 	"log/slog"
 	"net/http"
 	"os"
 	"snot/config"
+	"snot/web"
 )
-
-type IndexData struct {
-	Test string
-}
 
 func killProgram(err error) {
 	_, _ = fmt.Fprintln(os.Stderr, err.Error())
@@ -20,8 +16,7 @@ func killProgram(err error) {
 }
 
 func main() {
-	//configFile := flag.String("config", "conf.ini", "Configuration file")
-	flag.Parse()
+	flag.Parse() // add flags later
 
 	conf := config.New()
 	err := conf.IsValid()
@@ -30,18 +25,18 @@ func main() {
 	}
 	slog.Debug("Parsed config:", conf)
 
-	mux := http.NewServeMux()
-	tmpl, err := template.ParseFiles("templates/base.tmpl")
+	renderer, err := web.NewRenderer()
 	if err != nil {
 		killProgram(err)
 	}
+
+	mux := http.NewServeMux()
+
 	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		data := IndexData{"yes!"}
-		err := tmpl.Execute(w, data)
-		if err != nil {
-			return
-		}
+		renderer.Home(conf, w, r)
 	})
+	mux.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
+
 	slog.Info("Listening on " + "http://" + conf.ListenAddr)
 	killProgram(http.ListenAndServe(conf.ListenAddr, mux))
 }

@@ -1,0 +1,44 @@
+:root {
+    --snot-bg: #212529;
+    --snot-text: #f8f9fa;
+    --snot-link: #007bff;
+    --snot-font-sans: Arial;
+}
+
+html {
+    background-color: var(--snot-bg);
+    color: var(--snot-text);
+}
+
+p {
+    font-family: var(--snot-font-sans), sans-serif;
+}
+
+h1 {
+    font-family: var(--snot-font-sans), sans-serif;
+    font-size: 2rem;
+    font-weight: 300;
+}
+
+body {
+    margin: 0 auto;
+    padding: 1rem;
+    max-width: 95%;
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+header {
+    margin-bottom: 1rem;
+    border-bottom: 1px solid var(--snot-text);
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+footer a {
+    color: var(--snot-link);
+}

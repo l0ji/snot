@@ -1,0 +1,16 @@
+{{define "base"}}
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        {{if .Title}}
+            <title>{{.Title}}</title>
+        {{else}}
+            <title>snot</title>
+        {{end}}
+        <link rel="stylesheet" type="text/css" href="/static/css/main.css">
+    </head>
+    <body>
+    {{template "content" .}}
+    </body>
+    </html>
+{{end}}
